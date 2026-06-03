@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wiselee — ADN des Gammes</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap');
+
+    :root {
+      --cream:       #FAF7F2;
+      --cream-dark:  #F0EAE0;
+      --brown-deep:  #1E120A;
+      --brown-mid:   #4A2C1A;
+      --brown-light: #8B5E3C;
+
+      --orig-main:   #B8731A;
+      --orig-light:  #FDF3E3;
+      --orig-mid:    #E8C080;
+      --orig-border: #D4A055;
+
+      --bot-main:    #8E5E6E;
+      --bot-light:   #FDF0F4;
+      --bot-mid:     #D9A8B8;
+      --bot-border:  #C490A0;
+
+      --roots-main:  #7A4A28;
+      --roots-light: #FDF5EE;
+      --roots-mid:   #C4906A;
+      --roots-border:#A8703A;
+
+      --socle:       #3A5240;
+      --socle-light: #EDF4F0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--cream);
+      font-family: 'Inter', sans-serif;
+      color: var(--brown-deep);
+      min-height: 100vh;
+    }
+
+    /* ─── PAGE WRAPPER ─── */
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 48px 40px 64px;
+    }
+
+    /* ─── HEADER ─── */
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding-bottom: 32px;
+      border-bottom: 1.5px solid var(--cream-dark);
+    }
+
+    .brand-tag {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--brown-light);
+      margin-bottom: 12px;
+    }
+
+    header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 52px;
+      font-weight: 700;
+      color: var(--brown-deep);
+      letter-spacing: -0.5px;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    header h1 em {
+      font-style: italic;
+      color: var(--brown-mid);
+      font-weight: 400;
+    }
+
+    header .subtitle {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      font-style: italic;
+      color: var(--brown-light);
+      letter-spacing: 0.5px;
+    }
+
+    /* ─── SOCLE COMMUN ─── */
+    .socle {
+      background: var(--socle-light);
+      border: 1px solid #C5D9CC;
+      border-left: 4px solid var(--socle);
+      border-radius: 8px;
+      padding: 18px 24px;
+      margin-bottom: 36px;
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+    }
+
+    .socle-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--socle);
+      white-space: nowrap;
+      padding-top: 2px;
+      min-width: 80px;
+    }
+
+    .socle-content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 24px;
+    }
+
+    .socle-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12.5px;
+      color: var(--brown-mid);
+    }
+
+    .socle-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--socle);
+      flex-shrink: 0;
+    }
+
+    .socle-item strong {
+      font-weight: 600;
+      color: var(--brown-deep);
+    }
+
+    /* ─── THREE GAMMES GRID ─── */
+    .gammes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    /* ─── GAMME CARD ─── */
+    .gamme {
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .gamme.originals  { border-color: var(--orig-border);  background: var(--orig-light);  }
+    .gamme.botanica   { border-color: var(--bot-border);   background: var(--bot-light);   }
+    .gamme.roots      { border-color: var(--roots-border); background: var(--roots-light); }
+
+    /* Card header */
+    .gamme-header {
+      padding: 22px 22px 18px;
+      position: relative;
+    }
+
+    .originals .gamme-header  { background: var(--orig-main);  }
+    .botanica  .gamme-header  { background: var(--bot-main);   }
+    .roots     .gamme-header  { background: var(--roots-main); }
+
+    .phase-badge {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: rgba(255,255,255,0.25);
+      border: 1px solid rgba(255,255,255,0.5);
+      color: white;
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 20px;
+    }
+
+    .gamme-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: white;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .gamme-tagline {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 15px;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.3;
+    }
+
+    /* Card body */
+    .gamme-body {
+      padding: 18px 20px 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* Row */
+    .row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .row-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .originals .row-label  { color: var(--orig-main);  }
+    .botanica  .row-label  { color: var(--bot-main);   }
+    .roots     .row-label  { color: var(--roots-main); }
+
+    .row-text {
+      font-size: 12.5px;
+      line-height: 1.5;
+      color: var(--brown-mid);
+    }
+
+    .row-text strong {
+      color: var(--brown-deep);
+      font-weight: 600;
+    }
+
+    /* Pilier pill */
+    .pilier-pill {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11.5px;
+      font-weight: 600;
+      border: 1px solid;
+      width: fit-content;
+    }
+
+    .originals .pilier-pill  { background: var(--orig-mid);  border-color: var(--orig-border);  color: var(--brown-deep); }
+    .botanica  .pilier-pill  { background: var(--bot-mid);   border-color: var(--bot-border);   color: white; }
+    .roots     .pilier-pill  { background: var(--roots-mid); border-color: var(--roots-border); color: white; }
+
+    /* JTBD quote */
+    .jtbd {
+      background: rgba(255,255,255,0.6);
+      border-left: 3px solid;
+      border-radius: 0 6px 6px 0;
+      padding: 8px 12px;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 13.5px;
+      line-height: 1.5;
+      color: var(--brown-mid);
+    }
+
+    .originals .jtbd  { border-color: var(--orig-main);  }
+    .botanica  .jtbd  { border-color: var(--bot-main);   }
+    .roots     .jtbd  { border-color: var(--roots-main); }
+
+    /* SKU tags */
+    .skus {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 2px;
+    }
+
+    .sku-tag {
+      font-size: 10.5px;
+      font-weight: 500;
+      padding: 3px 9px;
+      border-radius: 4px;
+      border: 1px solid;
+    }
+
+    .originals .sku-tag  { background: rgba(184,115,26,0.08);  border-color: var(--orig-border);  color: var(--orig-main);  }
+    .botanica  .sku-tag  { background: rgba(142,94,110,0.08);  border-color: var(--bot-border);   color: var(--bot-main);   }
+    .roots     .sku-tag  { background: rgba(122,74,40,0.08);   border-color: var(--roots-border); color: var(--roots-main); }
+
+    .sku-tag.hero {
+      font-weight: 700;
+    }
+
+    /* Separator */
+    .sep {
+      height: 1px;
+      background: currentColor;
+      opacity: 0.12;
+    }
+
+    /* Ingredient groups */
+    .ing-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px;
+      margin-top: 5px;
+    }
+
+    .ing-cat {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--brown-light);
+      white-space: nowrap;
+      min-width: 60px;
+      padding-right: 4px;
+    }
+
+    .ing-tag {
+      font-size: 10.5px;
+      font-weight: 500;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.65);
+      border: 1px solid rgba(0,0,0,0.10);
+      color: var(--brown-mid);
+      white-space: nowrap;
+    }
+
+    .originals .ing-tag { border-color: rgba(184,115,26,0.2); }
+    .botanica  .ing-tag { border-color: rgba(142,94,110,0.2); }
+    .roots     .ing-tag { border-color: rgba(122,74,40,0.2);  }
+
+    /* Territoire chips */
+    .territoire {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .chip {
+      font-size: 10px;
+      font-weight: 500;
+      padding: 2px 8px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(0,0,0,0.12);
+      color: var(--brown-mid);
+    }
+
+    /* ─── DIFFÉRENCIATION SECTION ─── */
+    .diff-section {
+      background: white;
+      border: 1px solid var(--cream-dark);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 36px;
+    }
+
+    .diff-section h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--brown-deep);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .diff-section h3::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--cream-dark);
+    }
+
+    .diff-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .diff-col h4 {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .diff-col.orig h4   { color: var(--orig-main);  }
+    .diff-col.bot h4    { color: var(--bot-main);   }
+    .diff-col.roots h4  { color: var(--roots-main); }
+
+    .diff-col p {
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--brown-mid);
+    }
+
+    .diff-col p strong {
+      color: var(--brown-deep);
+      font-weight: 600;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 20px;
+      border-top: 1px solid var(--cream-dark);
+      font-size: 10.5px;
+      color: var(--brown-light);
+    }
+
+    footer strong {
+      color: var(--brown-mid);
+    }
+
+    /* ─── PRINT ─── */
+    @media print {
+      body { background: white; }
+      .page { padding: 20mm 15mm; max-width: 100%; }
+      header h1 { font-size: 40px; }
+      .gammes-grid { gap: 12px; }
+      .gamme-name { font-size: 22px; }
+    }
+
+    @page {
+      size: A4 landscape;
+      margin: 15mm;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <header>
+    <p class="brand-tag">Wiselee · Document interne · Confidentiel</p>
+    <h1>ADN des <em>Gammes</em></h1>
+    <p class="subtitle">Positionnement · Piliers · Différenciation — v1, mai 2026</p>
+  </header>
+
+  <!-- SOCLE COMMUN -->
+  <div class="socle">
+    <span class="socle-label">Socle commun</span>
+    <div class="socle-content">
+      <div class="socle-item"><span class="socle-dot"></span><span><strong>Base :</strong> pâte de datte Deglet Nour · barre 40 g flowpack</span></div>
+      <div class="socle-item"><span class="socle-dot"></span><span><strong>Engagements :</strong> Vegan · Sans sucre ajouté · Gluten-free · Clean label · DDM ~12 mois</span></div>
+      <div class="socle-item"><span class="socle-dot"></span><span><strong>Positionnement :</strong> premium, au-dessus de Nakd</span></div>
+      <div class="socle-item"><span class="socle-dot"></span><span><strong>3 piliers :</strong> se faire plaisir · curiosité sensorielle · manger sainement</span></div>
+    </div>
+  </div>
+
+  <!-- GAMMES -->
+  <div class="gammes-grid">
+
+    <!-- ORIGINALS -->
+    <div class="gamme originals">
+      <div class="gamme-header">
+        <span class="phase-badge">Phase 1</span>
+        <div class="gamme-name">Originals</div>
+        <div class="gamme-tagline">l'essentiel sublimé</div>
+      </div>
+      <div class="gamme-body">
+
+        <div class="row">
+          <span class="row-label">Pilier dominant</span>
+          <span class="pilier-pill">Se faire plaisir</span>
+        </div>
+
+        <div class="jtbd">
+          « Je veux un plaisir sain et sans culpabilité, rassurant, que je comprends en un coup d'œil. »
+        </div>
+
+        <div class="row">
+          <span class="row-label">Territoire sensoriel</span>
+          <div class="territoire">
+            <span class="chip">Rond</span>
+            <span class="chip">Fondant</span>
+            <span class="chip">Gourmand</span>
+            <span class="chip">Réconfortant</span>
+            <span class="chip">Palette ambre &amp; crème</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <span class="row-label">Intrants</span>
+          <div class="ing-group">
+            <span class="ing-cat">Base</span>
+            <span class="ing-tag">Datte Deglet Nour</span>
+            <span class="ing-tag">Figue AOC Djebba</span>
+            <span class="ing-tag">Pruneau d'Agen</span>
+            <span class="ing-tag">Abricot sec</span>
+          </div>
+          <div class="ing-group">
+            <span class="ing-cat">Fruits secs</span>
+            <span class="ing-tag">Cajou W320</span>
+            <span class="ing-tag">Amande</span>
+            <span class="ing-tag">Noisette Giresun</span>
+            <span class="ing-tag">Noix de Grenoble</span>
+            <span class="ing-tag">Sésame doré</span>
+          </div>
+          <div class="ing-group">
+            <span class="ing-cat">Fruits séchés</span>
+            <span class="ing-tag">Figues séchées Djebba</span>
+            <span class="ing-tag">Cerises</span>
+            <span class="ing-tag">Canneberges</span>
+          </div>
+          <div class="ing-group">
+            <span class="ing-cat">Cacao</span>
+            <span class="ing-tag">Cacao cru 72%</span>
+          </div>
+          <div class="ing-group">
+            <span class="ing-cat">Épices douces</span>
+            <span class="ing-tag">Cardamome verte</span>
+            <span class="ing-tag">Cannelle de Ceylan</span>
+            <span class="ing-tag">Vanille</span>
+            <span class="ing-tag">Fève Tonka</span>
+          </div>
+          <div class="ing-group">
+            <span class="ing-cat">Zestes</span>
+            <span class="ing-tag">Orange</span>
+            <span class="ing-tag">Citron</span>
+          </div>
+          <div class="ing-group">
+            <span class="ing-cat">Finition</span>
+            <span class="ing-tag">Fleur de sel</span>
+            <span class="ing-tag">Miel séché</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <span class="row-label">SKUs Phase 1</span>
+          <div class="skus">
+            <span class="sku-tag">O1 · Caramel &amp; Fleur de Sel</span>
+            <span class="sku-tag">O2 · Figue &amp; Amande</span>
+            <span class="sku-tag">O3 · Cacao &amp; Noisette</span>
+          </div>
+        </div>
+
+        <div class="sep"></div>
+
+        <div class="row">
+          <span class="row-label">Voix &amp; récit</span>
+          <span class="row-text">Franche, chaleureuse, sincère. <em>« Rien à cacher »</em> — l'origine de la datte et le geste minimal.</span>
+        </div>
+
+        <div class="row">
+          <span class="row-label">Packaging</span>
+          <span class="row-text">Épuré, chaleureux. Nombre réduit d'ingrédients en preuve visuelle.</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- BOTANICA -->
+    <div class="gamme botanica">
+      <div class="gamme-header">
+        <span class="phase-badge">Phase 1 · Hero</span>
+        <div class="gamme-name">Botanica</div>
+        <div class="gamme-tagline">la délicatesse végétale</div>
+      </div>
+      <div class="gamme-body">
+
+        <div class="row">
+          <span class="row-label">Pilier dominant</span>
+          <span class="pilier-pill">Curiosité sensorielle &amp; beauté</span>
+        </div>
+
+        <div class="jtbd">
+          « Je veux m'offrir un moment d'émotion, une découverte raffinée, quelque chose de beau et d'inattendu. »
+        </div>
+
+        <div class="row">
+          <span class="row-label">Territoire sensoriel</span>
+          <div class="territoire">
+            <span class="chip">Délicat</span>
+            <span class="chip">Floral</span>
+            <span class="chip">Parfumé</span>
+            <span class="chip">Élégant</span>
+            <span class="chip">Palette joyaux &amp; pastel</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <span class="row-label">Intrants</span>
+          <div class="ing-group">
+            <span class="ing-cat">Base</span>
+            <span class="ing-tag">Datte Deglet Nour</span>
+            <span class="ing-tag">Abricot</span>
+            <span class="ing-tag">Figue de barbarie ★</span>
+            <span class="ing-tag">Tamarin</span>
+            <span class="ing-tag">Mangue</span>
+          </div>
+          <div class="ing-group">
+            <span class="ing-cat">Fruits secs</span>
+            <span class="ing-tag">Pistache Antep AOP</span>
+            <span class="ing-tag">Cajou W240</span>
+            <span class="ing-tag">Macadamia</span>
+          </div>
+          <div class="ing-group">
+            <span class="ing-cat">Fleurs</span>
+            <span class="ing-tag">Rose</span>
+            <span class="ing-tag">Hibiscus</span>
+            <span class="ing-tag">Violette</span>
+            <span class="ing-tag">Jasmin</span>
+            <span class="ing-tag">Lavande</span>
+            <span class="ing-tag">Sureau</span>
+            <span class="ing-tag">Fleur d'oranger</span>
+            <span class="ing-tag">Calendula</span>
+            <span class="ing-tag">Bleuet</span>
+            <span class="ing-tag">Camomille</span>
+          </div>
+          <div class="ing-group">
+            <span class="ing-cat">Hydrolats</span>
+            <span class="ing-tag">Eau de rose</span>
+            <span class="ing-tag">Eau de fleur d'oranger</span>
+          </div>
+          <div class="ing-group">
+            <span class="ing-cat">Fruits séchés</span>
+            <span class="ing-tag">Framboise</span>
+            <span class="ing-tag">Fraise</span>
+            <span class="ing-tag">Mûres blanches</span>
+            <span class="ing-tag">Grenade</span>
+          </div>
+          <div class="ing-group">
+            <span class="ing-cat">Épices florales</span>
+            <span class="ing-tag">Cardamome verte</span>
+            <span class="ing-tag">Poivre rose</span>
+            <span class="ing-tag">Vanille Bourbon</span>
+          </div>
+          <div class="ing-group">
+            <span class="ing-cat">Ultra-premium</span>
+            <span class="ing-tag">Rose de Damas</span>
+            <span class="ing-tag">Jasmin de Grasse</span>
+            <span class="ing-tag">Violette de Toulouse</span>
+            <span class="ing-tag">Safran</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <span class="row-label">SKUs Phase 1</span>
+          <div class="skus">
+            <span class="sku-tag hero">B1 · Rose &amp; Pistache ★ HERO</span>
+            <span class="sku-tag">B2 · Hibiscus &amp; Framboise</span>
+          </div>
+        </div>
+
+        <div class="sep"></div>
+
+        <div class="row">
+          <span class="row-label">Voix &amp; récit</span>
+          <span class="row-text">Poétique, raffinée, sensorielle. L'art floral, la délicatesse, les accords botaniques.</span>
+        </div>
+
+        <div class="row">
+          <span class="row-label">Packaging</span>
+          <span class="row-text">Le plus travaillé : couleurs élégantes, illustrations botaniques, effet <em>« joaillerie »</em>. Vitrine visuelle de la marque.</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ROOTS -->
+    <div class="gamme roots">
+      <div class="gamme-header">
+        <span class="phase-badge">Phase 2</span>
+        <div class="gamme-name">Roots</div>
+        <div class="gamme-tagline">le caractère venu d'ailleurs</div>
+      </div>
+      <div class="gamme-body">
+
+        <div class="row">
+          <span class="row-label">Pilier dominant</span>
+          <span class="pilier-pill">Curiosité &amp; voyage</span>
+        </div>
+
+        <div class="jtbd">
+          « Je veux être surpris, voyager, un goût qui a du caractère et raconte une histoire. »
+        </div>
+
+        <div class="row">
+          <span class="row-label">Territoire sensoriel</span>
+          <div class="territoire">
+            <span class="chip">Chaud</span>
+            <span class="chip">Intense</span>
+            <span class="chip">Épicé</span>
+            <span class="chip">Torréfié</span>
+            <span class="chip">Palette terracotta &amp; épices</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <span class="row-label">Intrants</span>
+          <div class="ing-group">
+            <span class="ing-cat">Base</span>
+            <span class="ing-tag">Datte Deglet Nour</span>
+            <span class="ing-tag">Raisins sultanas</span>
+            <span class="ing-tag">Pruneau d'Agen</span>
+            <span class="ing-tag">Tamarin</span>
+          </div>
+          <div class="ing-group">
+            <span class="ing-cat">Fruits secs</span>
+            <span class="ing-tag">Pistache Antep</span>
+            <span class="ing-tag">Noix de Grenoble</span>
+            <span class="ing-tag">Tahini</span>
+            <span class="ing-tag">Sésame noir</span>
+          </div>
+          <div class="ing-group">
+            <span class="ing-cat">Épices</span>
+            <span class="ing-tag">Gingembre</span>
+            <span class="ing-tag">Cardamome noire</span>
+            <span class="ing-cat ing-cat-sm"></span>
+            <span class="ing-tag">Cannelle de Ceylan</span>
+            <span class="ing-tag">Curcuma</span>
+            <span class="ing-tag">Poivre de Sichuan</span>
+            <span class="ing-tag">Sumac</span>
+            <span class="ing-tag">Fève Tonka</span>
+            <span class="ing-tag">Piment d'Espelette</span>
+            <span class="ing-tag">Muscade</span>
+            <span class="ing-tag">Anis vert</span>
+            <span class="ing-tag">Paprika fumé</span>
+            <span class="ing-tag">Safran</span>
+          </div>
+          <div class="ing-group">
+            <span class="ing-cat">Zestes</span>
+            <span class="ing-tag">Citron</span>
+            <span class="ing-tag">Orange</span>
+            <span class="ing-tag">Bergamote</span>
+          </div>
+          <div class="ing-group">
+            <span class="ing-cat">Thés</span>
+            <span class="ing-tag">Matcha</span>
+            <span class="ing-tag">Rooibos</span>
+            <span class="ing-tag">Earl Grey</span>
+            <span class="ing-tag">Darjeeling</span>
+            <span class="ing-tag">Butterfly Pea</span>
+          </div>
+          <div class="ing-group">
+            <span class="ing-cat">Résines</span>
+            <span class="ing-tag">Mastic de Chios</span>
+            <span class="ing-tag">Benjoin</span>
+            <span class="ing-tag">Encens (à explorer)</span>
+          </div>
+          <div class="ing-group">
+            <span class="ing-cat">Herbes</span>
+            <span class="ing-tag">Menthe</span>
+            <span class="ing-tag">Romarin</span>
+            <span class="ing-tag">Thym</span>
+            <span class="ing-tag">Verveine</span>
+          </div>
+          <div class="ing-group">
+            <span class="ing-cat">Torréfié</span>
+            <span class="ing-tag">Cacao cru</span>
+            <span class="ing-tag">Kadaïf torréfié</span>
+            <span class="ing-tag">Sésame noir</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <span class="row-label">SKUs</span>
+          <div class="skus">
+            <span class="sku-tag" style="opacity:0.7; font-style:italic;">À définir en Phase 2</span>
+          </div>
+        </div>
+
+        <div class="sep"></div>
+
+        <div class="row">
+          <span class="row-label">Voix &amp; récit</span>
+          <span class="row-text">Évocatrice, voyageuse, confiante. Les routes des épices, les origines, <em>le goût qui raconte un lieu.</em></span>
+        </div>
+
+        <div class="row">
+          <span class="row-label">Packaging</span>
+          <span class="row-text">Chaud, profond, graphique. Registre <em>« carnet de voyage ».</em></span>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /gammes-grid -->
+
+  <!-- DIFFÉRENCIATION VS NAKD -->
+  <div class="diff-section">
+    <h3>Différenciation clé</h3>
+    <div class="diff-grid">
+      <div class="diff-col orig">
+        <h4>Originals</h4>
+        <p>Même <strong>simplicité apparente</strong> que Nakd, mais origine Deglet Nour nommée, qualité d'inserts supérieure, texture moelleuse travaillée. La simplicité est un <strong>parti pris premium</strong>, pas une économie.</p>
+      </div>
+      <div class="diff-col bot">
+        <h4>Botanica</h4>
+        <p>Le registre botanique et esthétique est <strong>totalement absent de Nakd</strong>. Ingrédients botaniques nobles et rares (pétales, hydrolats), complexité aromatique maîtrisée, exécution esthétique haut de gamme.</p>
+      </div>
+      <div class="diff-col roots">
+        <h4>Roots</h4>
+        <p>Une <strong>audace gustative absente du mainstream</strong>. Épices et ingrédients d'origine sélectionnés, accords audacieux maîtrisés. Récit d'origine authentique — pas un gadget exotique.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <span><strong>Wiselee</strong> — The wise indulgence</span>
+    <span>ADN des Gammes · v1 · Mai 2026</span>
+    <span style="color:#C0A88A; font-style:italic;">Confidentiel — Usage interne</span>
+  </footer>
+
+</div>
+</body>
+</html>
